@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fay Hatrash — GIS & Brand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ── TOKENS ── */
+  :root {
+    --bg:        #0f0f0f;
+    --surface:   #161616;
+    --border:    #222222;
+    --text-1:    #ede9e0;
+    --text-2:    #808080;
+    --text-3:    #404040;
+    --accent:    #e8d5a3;
+    --accent-lo: rgba(232,213,163,0.08);
+    --radius:    4px;
+    --gap:       clamp(2rem, 5vw, 5rem);
+  }
+
+  /* ── RESET ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text-1);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem var(--gap);
+    background: rgba(15,15,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text-1); }
+
+  /* ── HERO ── */
+  #home {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 8rem var(--gap) 4rem;
+    position: relative;
+  }
+  .hero-inner {
+    max-width: 1100px;
+    width: 100%;
+  }
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 1px;
+    background: var(--accent);
+  }
+  .hero-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(4rem, 12vw, 11rem);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    color: var(--text-1);
+    margin-bottom: 2.5rem;
+  }
+  .hero-name span { color: var(--accent); }
+  .hero-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .hero-bio {
+    max-width: 420px;
+    font-size: 0.95rem;
+    color: var(--text-2);
+    line-height: 1.7;
+  }
+  .hero-tags {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+  }
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    border: 1px solid var(--border);
+    padding: 0.35rem 0.85rem;
+    border-radius: 100px;
+  }
+  .tag.accent-tag {
+    color: var(--accent);
+    border-color: rgba(232,213,163,0.3);
+  }
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--text-3);
+    text-transform: uppercase;
+    animation: bounce 2.5s ease-in-out infinite;
+  }
+  .scroll-hint::after {
+    content: '';
+    width: 1px;
+    height: 3rem;
+    background: linear-gradient(to bottom, var(--text-3), transparent);
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: var(--gap) var(--gap); max-width: 1200px; margin: 0 auto; }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .section-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-2);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── WORK TABS ── */
+  .work-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 3rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    width: fit-content;
+  }
+  .tab-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: none;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-right: 1px solid var(--border);
+  }
+  .tab-btn:last-child { border-right: none; }
+  .tab-btn.active {
+    background: var(--accent-lo);
+    color: var(--accent);
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── PROJECT GRID ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .project-card {
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .project-card:hover { background: var(--surface); }
+  .project-img {
+    width: 100%;
+    aspect-ratio: 16/10;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(20%);
+    transition: filter 0.4s, transform 0.5s;
+  }
+  .project-card:hover .project-img {
+    filter: grayscale(0%);
+    transform: scale(1.02);
+  }
+  .img-placeholder {
+    width: 100%;
+    aspect-ratio: 16/10;
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .img-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 20px,
+      rgba(255,255,255,0.015) 20px,
+      rgba(255,255,255,0.015) 21px
+    );
+  }
+  .img-placeholder-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--text-3);
+    text-transform: uppercase;
+    text-align: center;
+    padding: 1rem;
+    z-index: 1;
+  }
+  .project-info {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .project-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .project-year {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-2);
+    letter-spacing: 0.1em;
+  }
+  .project-type {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-lo);
+    padding: 0.2rem 0.6rem;
+    border-radius: 100px;
+  }
+  .project-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+  .project-desc {
+    font-size: 0.82rem;
+    color: var(--text-2);
+    line-height: 1.6;
+  }
+  .project-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1rem;
+  }
+  .tool-pill {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.05em;
+    color: var(--text-3);
+    border: 1px solid var(--border);
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+  }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .skill-group {
+    background: var(--bg);
+    padding: 2rem;
+    transition: background 0.2s;
+  }
+  .skill-group:hover { background: var(--surface); }
+  .skill-group-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+  }
+  .skill-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .skill-list li {
+    font-size: 0.88rem;
+    color: var(--text-2);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .skill-list li::before {
+    content: '';
+    display: block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  /* ── EXPERIENCE ── */
+  .exp-list { display: flex; flex-direction: column; }
+  .exp-item {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 2rem;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+  .exp-item:first-child { border-top: 1px solid var(--border); }
+  .exp-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: var(--text-2);
+    padding-top: 0.15rem;
+  }
+  .exp-content {}
+  .exp-role {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+  }
+  .exp-company {
+    font-size: 0.82rem;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+  }
+  .exp-desc {
+    font-size: 0.85rem;
+    color: var(--text-2);
+    line-height: 1.7;
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    padding: var(--gap);
+    border-top: 1px solid var(--border);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .contact-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 3rem;
+    flex-wrap: wrap;
+  }
+  .contact-headline {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 6vw, 5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    max-width: 600px;
+  }
+  .contact-headline span { color: var(--accent); }
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-end;
+  }
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--text-2);
+    transition: color 0.2s;
+  }
+  .contact-link:hover { color: var(--accent); }
+  .contact-link-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+  .contact-arrow {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 0.6rem;
+    transition: all 0.2s;
+  }
+  .contact-link:hover .contact-arrow {
+    background: var(--accent-lo);
+    border-color: rgba(232,213,163,0.3);
+    color: var(--accent);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 2rem var(--gap);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  footer p {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--text-3);
+    text-transform: uppercase;
+  }
+
+  /* ── REVEAL ANIMATION ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
+    .hero-bottom { flex-direction: column; align-items: flex-start; }
+    .hero-tags { align-items: flex-start; }
+    .contact-inner { flex-direction: column; }
+    .contact-links { align-items: flex-start; }
+    .projects-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── MOBILE NAV TOGGLE ── */
+  .nav-toggle {
+    display: none;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    cursor: pointer;
+    padding: 0.4rem 0.6rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+  @media (max-width: 768px) { .nav-toggle { display: block; } }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-logo">./fay.hatrash</div>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-toggle" onclick="toggleMobileMenu()">MENU</button>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="home">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Jeddah, Saudi Arabia</div>
+    <h1 class="hero-name">FAY<br><span>HATRASH</span></h1>
+    <div class="hero-bottom">
+      <p class="hero-bio">
+        GIS Specialist &amp; Brand Strategist — bridging spatial intelligence
+        with visual identity design. From geospatial dashboards to brand systems.
+      </p>
+      <div class="hero-tags">
+        <span class="tag accent-tag">GIS Solutions</span>
+        <span class="tag accent-tag">Brand Strategy</span>
+        <span class="tag">Jeddah · KSA</span>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">Scroll</div>
+</section>
+
+<!-- ── WORK ── -->
+<section id="work">
+  <div class="section-header reveal">
+    <h2 class="section-title">Work</h2>
+    <span class="section-count">8 Projects</span>
+  </div>
+
+  <div class="work-tabs reveal">
+    <button class="tab-btn active" onclick="switchTab('gis', this)">GIS &amp; Spatial</button>
+    <button class="tab-btn" onclick="switchTab('brand', this)">Brand &amp; Visual</button>
+  </div>
+
+  <!-- GIS PROJECTS -->
+  <div class="tab-panel active" id="tab-gis">
+    <div class="projects-grid">
+
+      <div class="project-card reveal">
+        <!-- Replace src with your actual image: assets/images/gis-urban-expansion.jpg -->
+        <div class="img-placeholder">
+          <div class="img-placeholder-text">Add image:<br>assets/images/gis-urban-expansion.jpg</div>
+        </div>
+        <div class="project-info">
+          <div class="project-meta">
+            <span class="project-year">2024</span>
+            <span class="project-type">Spatial Analysis</span>
+          </div>
+          <div class="project-name">Urban Expansion & Vision 2030</div>
+          <p class="project-desc">
+            Advanced spatial analysis tracking urban change in Jeddah (2016–2024) using Landsat satellite data,
+            linking expansion areas to major Vision 2030 projects.
+          </p>
+          <div class="project-tools">
+            <span class="tool-pill">ArcGIS Pro</span>
+            <span class="tool-pill">Landsat 8/9</span>
+            <span class="tool-pill">NDBI</span>
+            <span class="tool-pill">Change Detection</span>
+            <span class="tool-pill">Spatial Analyst</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="img-placeholder">
+          <div class="img-placeholder-text">Add image:<br>assets/images/gis-hajj-dashboard.jpg</div>
+        </div>
+        <div class="project-info">
+          <div class="project-meta">
+            <span class="project-year">2025</span>
+            <span class="project-type">Web GIS · Dashboard</span>
+          </div>
+          <div class="project-name">Hajj & Umrah Facilities Dashboard</div>
+          <p class="project-desc">
+            ArcGIS Online geospatial platform integrating dashboards for 4,500+ hospitality facilities
+            across Makkah and Madinah, reducing manual tracking time by 70%.
+          </p>
+          <div class="project-tools">
+            <span class="tool-pill">ArcGIS Online</span>
+            <span class="tool-pill">Web GIS</span>
+            <span class="tool-pill">Dashboard Design</span>
+            <span class="tool-pill">Geodatabase</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="img-placeholder">
+          <div class="img-placeholder-text">Add image:<br>assets/images/gis-population.jpg</div>
+        </div>
+        <div class="project-info">
+          <div class="project-meta">
+            <span class="project-year">2024</span>
+            <span class="project-type">Thematic Cartography</span>
+          </div>
+          <div class="project-name">Population Distribution — KSA</div>
+          <p class="project-desc">
+            Choropleth map visualizing population distribution across all 13 administrative regions
+            of Saudi Arabia, applying Natural Breaks classification for precision.
+          </p>
+          <div class="project-tools">
+            <span class="tool-pill">ArcGIS Pro</span>
+            <span class="tool-pill">Choropleth Map</span>
+            <span class="tool-pill">Spatial Statistics</span>
+            <span class="tool-pill">Graduated Colors</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="img-placeholder">
+          <div class="img-placeholder-text">Add image:<br>assets/images/gis-urban-services.jpg</div>
+        </div>
+        <div class="project-info">
+          <div class="project-meta">
+            <span class="project-year">2024</span>
+            <span class="project-type">Urban Analysis</span>
+          </div>
+          <div class="project-name">Urban Services Mapping — North Jeddah</div>
+          <p class="project-desc">
+            Geographic analysis of educational and recreational service distribution across
+            residential neighborhoods in North Jeddah, with road network classification.
+          </p>
+          <div class="project-tools">
+            <span class="tool-pill">ArcGIS Pro</span>
+            <span class="tool-pill">Vector Analysis</span>
+            <span class="tool-pill">Network Analysis</span>
+            <span class="tool-pill">POI Mapping</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BRANDING PROJECTS -->
+  <div class="tab-panel" id="tab-brand">
+    <div class="projects-grid">
+
+      <div class="project-card reveal">
+        <!-- Replace with: assets/images/brand-lana.jpg -->
+        <div class="img-placeholder">
+          <div class="img-placeholder-text">Add image:<br>assets/images/brand-lana.jpg</div>
+        </div>
+        <div class="project-info">
+          <div class="project-meta">
+            <span class="project-year">2025 — Present</span>
+            <span class="project-type">Brand Identity</span>
+          </div>
+          <div class="project-name">Lana Logistics</div>
+          <p class="project-desc">
+            Website redesign, full visual identity renewal, and social media management
+            for a leading Saudi logistics company.
+          </p>
+          <div class="project-tools">
+            <span class="tool-pill">Visual Identity</span>
+            <span class="tool-pill">Web Design</span>
+            <span class="tool-pill">Social Media</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="img-placeholder">
+          <div class="img-placeholder-text">Add image:<br>assets/images/brand-ursla.jpg</div>
+        </div>
+        <div class="project-info">
+          <div class="project-meta">
+            <span class="project-year">2021 — 2023</span>
+            <span class="project-type">Brand Identity</span>
+          </div>
+          <div class="project-name">Ursla Care</div>
+          <p class="project-desc">
+            Full visual identity for an oral care brand — logo, color palette, typography,
+            and social media management across official channels.
+          </p>
+          <div class="project-tools">
+            <span class="tool-pill">Logo Design</span>
+            <span class="tool-pill">Brand Guidelines</span>
+            <span class="tool-pill">Content Design</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="img-placeholder">
+          <div class="img-placeholder-text">Add image:<br>assets/images/brand-aram.jpg</div>
+        </div>
+        <div class="project-info">
+          <div class="project-meta">
+            <span class="project-year">2021</span>
+            <span class="project-type">Brand Identity</span>
+          </div>
+          <div class="project-name">Aram Perfumery</div>
+          <p class="project-desc">
+            Brand identity and social content for a luxury perfumery — gold and dark
+            editorial aesthetic reflecting the brand's heritage positioning.
+          </p>
+          <div class="project-tools">
+            <span class="tool-pill">Identity Design</span>
+            <span class="tool-pill">Editorial</span>
+            <span class="tool-pill">Social Content</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="img-placeholder">
+          <div class="img-placeholder-text">Add image:<br>assets/images/brand-logos.jpg</div>
+        </div>
+        <div class="project-info">
+          <div class="project-meta">
+            <span class="project-year">2021 — Present</span>
+            <span class="project-type">Logo Design</span>
+          </div>
+          <div class="project-name">Logo Collection</div>
+          <p class="project-desc">
+            A collection of 12+ logo designs spanning Arabic calligraphy, retro type,
+            and contemporary brand marks — Bamboo, Twistd, GlitterBoo, and more.
+          </p>
+          <div class="project-tools">
+            <span class="tool-pill">Adobe Illustrator</span>
+            <span class="tool-pill">Arabic Typography</span>
+            <span class="tool-pill">Brand Marks</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── SKILLS ── -->
+<section id="skills">
+  <div class="section-header reveal">
+    <h2 class="section-title">Skills</h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-group reveal">
+      <div class="skill-group-title">GIS & Spatial</div>
+      <ul class="skill-list">
+        <li>ArcGIS Pro</li>
+        <li>ArcGIS Online</li>
+        <li>QGIS</li>
+        <li>Remote Sensing</li>
+        <li>Spatial Analysis</li>
+        <li>Thematic Cartography</li>
+        <li>Dashboard Design</li>
+        <li>Geodatabase Management</li>
+      </ul>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Design & Creative</div>
+      <ul class="skill-list">
+        <li>Adobe Illustrator</li>
+        <li>Adobe Photoshop</li>
+        <li>Figma</li>
+        <li>Visual Identity Systems</li>
+        <li>Logo & Brand Design</li>
+        <li>Typography</li>
+        <li>Infographic Design</li>
+      </ul>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Strategy & Marketing</div>
+      <ul class="skill-list">
+        <li>Brand Strategy</li>
+        <li>Go-to-Market Planning</li>
+        <li>B2B Marketing</li>
+        <li>Content Strategy</li>
+        <li>Digital Marketing</li>
+        <li>Product Launch</li>
+        <li>Market Research</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── EXPERIENCE ── -->
+<section id="experience">
+  <div class="section-header reveal">
+    <h2 class="section-title">Experience</h2>
+  </div>
+  <div class="exp-list">
+    <div class="exp-item reveal">
+      <div class="exp-date">Nov 2025 —<br>Present</div>
+      <div class="exp-content">
+        <div class="exp-role">GIS Solutions & Marketing Specialist</div>
+        <div class="exp-company">GP Solutions · Jeddah, Saudi Arabia</div>
+        <p class="exp-desc">
+          Deployed ArcGIS Online platform for 4,500+ Hajj and Umrah facilities.
+          Led go-to-market strategies for 3+ B2B SaaS products and full-cycle
+          rebranding for 2+ digital products in the hospitality compliance sector.
+        </p>
+      </div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-date">Dec 2024 —<br>May 2025</div>
+      <div class="exp-content">
+        <div class="exp-role">Art Explainer</div>
+        <div class="exp-company">Islamic Art Biennale · Jeddah, Saudi Arabia</div>
+        <p class="exp-desc">
+          Multilingual cultural interpretation in Arabic, English, and Sign Language
+          for 10,000+ visitors at a high-profile international arts event.
+        </p>
+      </div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-date">2021 —<br>Present</div>
+      <div class="exp-content">
+        <div class="exp-role">Founder & Creative Director</div>
+        <div class="exp-company">Darkn Studio · darkn.co</div>
+        <p class="exp-desc">
+          Founded and scaled an independent creative studio specializing in brand
+          identity, content design, and digital strategy. Delivered end-to-end
+          visual systems for 12+ clients across hospitality, logistics, and HR sectors.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="contact-inner reveal">
+    <h2 class="contact-headline">
+      Let's make<br><span>something</span><br>real.
+    </h2>
+    <div class="contact-links">
+      <a href="mailto:FayHatrash@gmail.com" class="contact-link">
+        <div>
+          <div class="contact-link-label">Email</div>
+          <div>FayHatrash@gmail.com</div>
+        </div>
+        <div class="contact-arrow">↗</div>
+      </a>
+      <a href="https://linkedin.com/in/fayhatrash" target="_blank" class="contact-link">
+        <div>
+          <div class="contact-link-label">LinkedIn</div>
+          <div>linkedin.com/in/fayhatrash</div>
+        </div>
+        <div class="contact-arrow">↗</div>
+      </a>
+      <a href="https://darkn.co" target="_blank" class="contact-link">
+        <div>
+          <div class="contact-link-label">Studio</div>
+          <div>darkn.co</div>
+        </div>
+        <div class="contact-arrow">↗</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p>© 2025 Fay Hatrash</p>
+  <p>GIS & Brand · Jeddah, KSA</p>
+</footer>
+
+<script>
+  /* ── TAB SWITCHING ── */
+  function switchTab(id, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  /* ── SCROLL REVEAL ── */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* ── MOBILE MENU ── */
+  function toggleMobileMenu() {
+    const links = document.querySelector('.nav-links');
+    if (links.style.display === 'flex') {
+      links.style.display = '';
+    } else {
+      links.style.cssText = `
+        display: flex; flex-direction: column; position: fixed;
+        top: 60px; left: 0; right: 0; background: #0f0f0f;
+        padding: 2rem; border-bottom: 1px solid #222; gap: 1.5rem;
+      `;
+    }
+  }
+
+  /* ── HIDE SCROLL HINT ON SCROLL ── */
+  const hint = document.querySelector('.scroll-hint');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 80) hint.style.opacity = '0';
+    else hint.style.opacity = '1';
+  }, { passive: true });
+</script>
+</body>
+</html>
